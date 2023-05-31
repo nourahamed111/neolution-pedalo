@@ -21,6 +21,12 @@
             <th>
                 @Html.DisplayNameFor(model => model.Bookings[0].EndDate)
             </th>
+            <th>
+
+            </th>
+            <th>
+                <a asp-page="./Create">Create</a>
+            </th>
         </tr>
     </thead>
     <tbody>
@@ -38,6 +44,12 @@
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.EndDate)
+                </td>
+                <td>
+                    <a asp-page="./Edit" asp-route-id="@item.BookingId">Edit</a>
+                </td>
+                <td>
+                    <a asp-page="./Delete" asp-route-id="@item.BookingId">Delete</a>
                 </td>
             </tr>
         }

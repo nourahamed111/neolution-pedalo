@@ -19,6 +19,9 @@
                 @Html.DisplayNameFor(model => model.Customers[0].BirthdayDate)
             </th>
             <th></th>
+            <th>
+                <a asp-page="./Create">Create</a>
+            </th>
         </tr>
     </thead>
     <tbody>
@@ -36,6 +39,10 @@
                 </td>
                 <td>
                     <a asp-page="./Edit" asp-route-id="@item.CustomerId">Edit</a>
+                </td>
+            
+                <td>
+                    <a asp-page="./Delete" asp-route-id="@item.CustomerId">Delete</a>
                 </td>
             </tr>
         }

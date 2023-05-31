@@ -21,8 +21,10 @@
             <th>
                 @Html.DisplayNameFor(model => model.Pedaloes[0].HourlyRate)
             </th>
+            <th></th>
+            <th></th>
             <th>
-
+                <a asp-page="./Create">Create</a>
             </th>
         </tr>
     </thead>
@@ -43,6 +45,13 @@
                 @Html.DisplayFor(modelItem => item.HourlyRate)
             </td>
             <td><a href="/pedaloes/pdf/?id=@item.PedaloId">PDF</a></td>
+                <td>
+                    <a asp-page="./Edit" asp-route-id="@item.PedaloId">Edit</a>
+                </td>
+             
+                <td>
+                    <a asp-page="./Delete" asp-route-id="@item.PedaloId">Delete</a>
+                </td>
         </tr>
     }
     </tbody>

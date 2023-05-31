@@ -12,10 +12,8 @@
     {
         private readonly IDbContextFactory contextFactory;
 
-        public IndexModel(IDbContextFactory contextFactory)
-        {
+        public IndexModel(IDbContextFactory contextFactory) =>
             this.contextFactory = contextFactory;
-        }
 
         public IReadOnlyList<Booking> Bookings { get; set; }
 

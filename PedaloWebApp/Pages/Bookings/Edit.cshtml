@@ -1,0 +1,43 @@
+﻿ @page
+@model PedaloWebApp.Pages.Bookings.EditModel
+@{
+    ViewData["Title"] = "Edit Booking";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<h4>Booking</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Booking.BookingId" />
+
+            <div class="form-group">
+                <label asp-for="Booking.CustomerFirstName" class="control-label">@Html.DisplayNameFor(model => model.Booking.CustomerFirstName)</label>
+                <input asp-for="Booking.CustomerFirstName" class="form-control" value="@Model.Booking.CustomerFirstName" readonly="readonly" />
+            </div>
+            <div class="form-group">
+                <label asp-for="Booking.CustomerLastName" class="control-label">@Html.DisplayNameFor(model => model.Booking.CustomerLastName)</label>
+                <input asp-for="Booking.CustomerLastName" class="form-control" value="@Model.Booking.CustomerLastName" readonly="readonly" />
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Booking.StartDate" class="control-label">Start==Date</label>
+                <input asp-for="Booking.StartDate" class="form-control" />
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Booking.EndDate" class="control-label"></label>
+                <input asp-for="Booking.EndDate" class="form-control" />
+            </div>
+
+            <div class="form-group">
+                <input asp-for="Booking.BookingId" type="hidden" />
+                <input type="submit" value="Edit" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+

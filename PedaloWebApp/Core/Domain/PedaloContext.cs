@@ -1,4 +1,4 @@
-﻿namespace PedaloWebApp.Core.Domain
+﻿ namespace PedaloWebApp.Core.Domain
 {
     using System;
     using System.Linq;

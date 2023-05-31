@@ -6,5 +6,29 @@
 
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        Quick Create Booking
+    </div>
+    <div class="card-body">
+        <form method="post" asp-page-handler="QuickCreateBooking">
+            <!-- Form fields for creating a booking -->
+        </form>
+    </div>
+</div>
+
+<div class="card mt-4">
+    <div class="card-header">
+        Pedaloes Booking Count
+    </div>
+    <div class="card-body">
+        <ul>
+            @foreach (var pedalo in Model.Pedaloes)
+            {
+                <li>@pedalo.Name - Booking Count: @pedalo.BookingCount</li>
+            }
+        </ul>
+    </div>
 </div>

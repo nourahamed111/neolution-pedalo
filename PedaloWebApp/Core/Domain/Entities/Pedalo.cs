@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
 
     public class Pedalo
     {
@@ -11,7 +12,19 @@
         public int Capacity { get; set; }
         public decimal HourlyRate { get; set; }
 
-        public ICollection<Booking> Bookings { get; set; }
+        public virtual ICollection<Booking> Bookings { get; set; }
+
+        public int BookingCount
+        {
+            get
+            {
+                if (Bookings != null)
+                {
+                    return Bookings.Count;
+                }
+                return 0;
+            }
+        }
     }
 
     public enum PedaloColor
