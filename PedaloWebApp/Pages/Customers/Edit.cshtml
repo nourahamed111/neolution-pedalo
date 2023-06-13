@@ -13,15 +13,16 @@
         <form method="post">
             <div class="form-group">
                 <label asp-for="Customer.FirstName" class="control-label"></label>
-                <input asp-for="Customer.FirstName" class="form-control" />
+                <input asp-for="Customer.FirstName" class="form-control" required pattern="[A-Za-z]+" />
             </div>
             <div class="form-group">
                 <label asp-for="Customer.LastName" class="control-label"></label>
-                <input asp-for="Customer.LastName" class="form-control" />
+                <input asp-for="Customer.LastName" class="form-control" required pattern="[A-Za-z]+" />
             </div>
             <div class="form-group">
                 <label asp-for="Customer.BirthdayDate" class="control-label"></label>
-                <input asp-for="Customer.BirthdayDate" class="form-control" />
+                <input asp-for="Customer.BirthdayDate" id="birthdayInput" class="form-control" required type="date" />
+               
             </div>
             <div class="form-group">
                 <input asp-for="Customer.CustomerId" type="hidden"/>
@@ -34,3 +35,21 @@
 <div>
     <a asp-page="Index">Back to List</a>
 </div>
+<script>
+    // Birthday validation function
+    var birthdayInput = document.getElementById('birthdayInput');
+    birthdayInput.addEventListener('input', validateBirthday);
+    function validateBirthday() {
+        var birthday = new Date(birthdayInput.value);
+        var currentDate = new Date();
+        var minimumAge = 18;
+        var minimumBirthYear = currentDate.getFullYear() - minimumAge;
+        var birthYear = birthday.getFullYear();
+        if (birthYear > minimumBirthYear) {
+            birthdayInput.setCustomValidity('You must be at least 18 years old.');
+        } else {
+            birthdayInput.setCustomValidity('');
+        }
+    }
+
+</script>

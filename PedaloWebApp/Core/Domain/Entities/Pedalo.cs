@@ -13,6 +13,10 @@
         public decimal HourlyRate { get; set; }
 
         public virtual ICollection<Booking> Bookings { get; set; }
+        public int AvailableCapacity
+        {
+            get { return Capacity - BookingCount; }
+        }
 
         public int BookingCount
         {
@@ -26,6 +30,7 @@
             }
         }
     }
+   
 
     public enum PedaloColor
     {

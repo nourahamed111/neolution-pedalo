@@ -9,25 +9,28 @@
     public class DbContextFactory : IDbContextFactory
     {
         private static readonly Assembly ConfigurationsAssembly = typeof(DbContextFactory).Assembly;
-        private readonly DbContextOptionsBuilder<PedaloContext> optionsBuilder;
+        private readonly DbContextOptions<PedaloContext> options;
 
         public DbContextFactory(IConfiguration configuration)
         {
-            this.optionsBuilder = new DbContextOptionsBuilder<PedaloContext>();
             var connectionString = configuration.GetConnectionString("DefaultConnection");
-            this.optionsBuilder.UseSqlServer(connectionString);
+
+            var optionsBuilder = new DbContextOptionsBuilder<PedaloContext>();
+            optionsBuilder.UseSqlServer(connectionString);
+
+            this.options = optionsBuilder.Options;
         }
 
         /// <inheritdoc/>
         public PedaloContext CreateContext()
         {
-            return new PedaloContext(this.optionsBuilder.Options, ConfigurationsAssembly);
+            return new PedaloContext(options, ConfigurationsAssembly);
         }
 
         /// <inheritdoc/>
         public PedaloContext CreateReadOnlyContext()
         {
-            var context = new PedaloContext(this.optionsBuilder.Options, ConfigurationsAssembly);
+            var context = new PedaloContext(options, ConfigurationsAssembly);
             context.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
             return context;
         }

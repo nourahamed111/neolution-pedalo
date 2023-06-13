@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
 using PedaloWebApp.Core.Domain.Entities;
 using PedaloWebApp.Core.Interfaces.Data;
 
@@ -22,12 +21,14 @@ namespace PedaloWebApp.Pages.Bookings
         public BookingCreateModel Booking { get; set; }
         public List<Pedalo> Pedalos { get; set; }
         public List<Customer> Customers { get; set; }
+        public List<Passenger> Passengers { get; set; }
 
         public IActionResult OnGet()
         {
             using var context = contextFactory.CreateReadOnlyContext();
             Pedalos = context.Pedaloes.ToList();
             Customers = context.Customers.ToList();
+            Passengers = context.Passengers.ToList();
 
             return Page();
         }
@@ -41,7 +42,6 @@ namespace PedaloWebApp.Pages.Bookings
 
             using var context = contextFactory.CreateContext();
 
-            // Find the selected Pedalo based on the Pedalo name
             var pedalo = context.Pedaloes.FirstOrDefault(p =>
                 p.Name == Booking.PedaloName);
 
@@ -51,7 +51,6 @@ namespace PedaloWebApp.Pages.Bookings
                 return Page();
             }
 
-            // Find the selected Customer based on the Customer name
             var customer = context.Customers.FirstOrDefault(c =>
                 c.FirstName == Booking.CustomerFirstName && c.LastName == Booking.CustomerLastName);
 
@@ -61,30 +60,68 @@ namespace PedaloWebApp.Pages.Bookings
                 return Page();
             }
 
-            // Create a new booking instance
+            var selectedPassengers = Booking.SelectedPassengerIds
+                .Select(id => context.Passengers.FirstOrDefault(p => p.PassengerId == id))
+                .Where(p => p != null)
+                .ToList();
+
+            var passengerNames = selectedPassengers
+                .Select(p => $"{p.PassengerFirstName} {p.PassengerLastName}")
+                .ToList();
+
+            if (passengerNames.Count == 0)
+            {
+                passengerNames.Add($"{customer.FirstName} {customer.LastName}");
+            }
+
+            var startDateTime = Booking.Date.Date + Booking.StartTime;
+            var endDateTime = Booking.Date.Date + Booking.EndTime;
+
             var newBooking = new Booking
             {
                 BookingId = Guid.NewGuid(),
                 PedaloId = pedalo.PedaloId,
                 CustomerId = customer.CustomerId,
-                StartDate = Booking.StartDate,
-                EndDate = Booking.EndDate
+                StartDate = startDateTime,
+                EndDate = endDateTime,
+                PassengerNames = string.Join(",", passengerNames)
             };
 
-            // Save the new booking
             context.Bookings.Add(newBooking);
             context.SaveChanges();
 
             return RedirectToPage("./Index");
         }
+
+
+
     }
 
     public class BookingCreateModel
     {
         public string PedaloName { get; set; }
-        public DateTime StartDate { get; set; }
-        public DateTime? EndDate { get; set; }
-        public string CustomerFirstName { get; set; }
-        public string CustomerLastName { get; set; }
+        public DateTime Date { get; set; }
+        public TimeSpan StartTime { get; set; }
+        public TimeSpan EndTime { get; set; }
+        public string CustomerFullName { get; set; }
+        public string CustomerFirstName
+        {
+            get
+            {
+                return CustomerFullName?.Split(' ')[0];
+            }
+        }
+
+        public string CustomerLastName
+        {
+            get
+            {
+                return CustomerFullName?.Split(' ')[1];
+            }
+        }
+
+        public List<Guid> SelectedPassengerIds { get; set; } = new List<Guid>();
     }
+
+
 }

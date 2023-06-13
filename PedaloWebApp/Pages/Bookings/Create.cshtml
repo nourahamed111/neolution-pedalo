@@ -2,68 +2,105 @@
 @model PedaloWebApp.Pages.Bookings.CreateModel
 
 <h1>Create Booking</h1>
-
 <div class="row">
     <div class="col-md-4">
         <form method="post">
             <div class="form-group">
                 <label asp-for="Booking.PedaloName">Pedalo Name</label>
-                <select asp-for="Booking.PedaloName" class="form-control" required>
+                <select id="Booking_PedaloName" asp-for="Booking.PedaloName" class="form-control" required>
                     <option value="">Select a Pedalo</option>
                     @foreach (var pedalo in Model.Pedalos)
                     {
-                        <option value="@pedalo.Name">@pedalo.Name</option>
+                        <option value="@pedalo.Name" data-capacity="@pedalo.Capacity">@pedalo.Name</option>
                     }
                 </select>
                 <span asp-validation-for="Booking.PedaloName" class="text-danger"></span>
             </div>
 
             <div class="form-group">
-                <label asp-for="Booking.StartDate">Start Date</label>
-                <input asp-for="Booking.StartDate" type="datetime-local" class="form-control" required />
-                <span asp-validation-for="Booking.StartDate" class="text-danger"></span>
+                <label>Pedalo Capacity</label>
+                <input id="pedaloCapacityTextBox" type="text" class="form-control" readonly />
             </div>
 
             <div class="form-group">
-                <label asp-for="Booking.EndDate">End Date</label>
-                <input asp-for="Booking.EndDate" type="datetime-local" class="form-control" />
-                <span asp-validation-for="Booking.EndDate" class="text-danger"></span>
+                <label asp-for="Booking.Date">Date</label>
+                <input asp-for="Booking.Date" type="date" class="form-control" required type="date" />
+                <span asp-validation-for="Booking.Date" class="text-danger"></span>
             </div>
 
             <div class="form-group">
-                <label asp-for="Booking.CustomerFirstName">Customer First Name</label>
-                <select asp-for="Booking.CustomerFirstName" class="form-control" required>
-                    <option value="">Select a Customer First Name</option>
+                <label asp-for="Booking.StartTime">Start Time</label>
+                <input asp-for="Booking.StartTime" type="time" class="form-control" required id="startTimeInput" />
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Booking.EndTime">End Time</label>
+                <input asp-for="Booking.EndTime" type="time" class="form-control" required id="endTimeInput" />
+            </div>
+
+
+            <div class="form-group">
+                <label asp-for="Booking.CustomerFullName">Customer</label>
+                <select asp-for="Booking.CustomerFullName" class="form-control" required>
+                    <option value="">Select a Customer</option>
                     @foreach (var customer in Model.Customers)
                     {
-                        <option value="@customer.FirstName">@customer.FirstName</option>
+                        <option value="@($"{customer.FirstName} {customer.LastName}")">@($"{customer.FirstName} {customer.LastName}")</option>
                     }
                 </select>
-                <span asp-validation-for="Booking.CustomerFirstName" class="text-danger"></span>
+                <span asp-validation-for="Booking.CustomerFullName" class="text-danger"></span>
             </div>
 
             <div class="form-group">
-                <label asp-for="Booking.CustomerLastName">Customer Last Name</label>
-                <select asp-for="Booking.CustomerLastName" class="form-control" required>
-                    <option value="">Select a Customer Last Name</option>
-                    @foreach (var customer in Model.Customers)
+                <label>Passengers</label>
+                <section id="passengerListSection">
+                    @foreach (var passenger in Model.Passengers)
                     {
-                        <option value="@customer.LastName">@customer.LastName</option>
+                        <div class="form-check">
+                            <input class="form-check-input passenger-checkbox" type="checkbox" id="passenger-@passenger.PassengerId" name="Booking.SelectedPassengerIds" value="@passenger.PassengerId">
+                            <label class="form-check-label" for="passenger-@passenger.PassengerId">
+                                @passenger.PassengerFirstName @passenger.PassengerLastName
+                            </label>
+                        </div>
                     }
-                </select>
-                <span asp-validation-for="Booking.CustomerLastName" class="text-danger"></span>
+                </section>
+                <div>
+                    <p id="validationText" class="text-danger"></p>
+                </div>
             </div>
 
             <div class="form-group">
-                <button type="submit" class="btn btn-primary">Create</button>
+                <button id="editButton" type="submit" class="btn btn-primary" disabled="@(!Model.ModelState.IsValid)">Create</button>
                 <a asp-page="./Index" class="btn btn-secondary">Back to List</a>
             </div>
             <div class="form-group">
                 <a asp-page="/Customers/Create" class="btn btn-danger">Create New Customer</a>
             </div>
-
+            <div class="form-group">
+                <a asp-page="/Passengers/Create" class="btn btn-danger">Create New Passenger</a>
+            </div>
         </form>
     </div>
 </div>
+<script>
+    //booking time validation
+    var startTimeInput = document.getElementById("startTimeInput");
+    var endTimeInput = document.getElementById("endTimeInput");
 
+    startTimeInput.addEventListener("input", validateTimeRange);
+    endTimeInput.addEventListener("input", validateTimeRange);
+    function validateTimeRange() {
+        var startTime = startTimeInput.value;
+        var endTime = endTimeInput.value;
 
+        if (startTime && endTime) {
+            if (startTime > endTime) {
+                startTimeInput.setCustomValidity("Start time cannot be after end time.");
+                endTimeInput.setCustomValidity("End time cannot be before start time.");
+            } else {
+                startTimeInput.setCustomValidity("");
+                endTimeInput.setCustomValidity("");
+            }
+        }
+    }
+</script>

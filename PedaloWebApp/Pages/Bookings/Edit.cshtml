@@ -1,43 +1,102 @@
-﻿ @page
+﻿@page
 @model PedaloWebApp.Pages.Bookings.EditModel
-@{
-    ViewData["Title"] = "Edit Booking";
-}
 
-<h1>@ViewData["Title"]</h1>
+<h1>Edit Booking</h1>
 
-<h4>Booking</h4>
 <hr />
+
 <div class="row">
     <div class="col-md-4">
         <form method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div asp-validation-summary="All" class="text-danger"></div>
+
             <input type="hidden" asp-for="Booking.BookingId" />
 
             <div class="form-group">
-                <label asp-for="Booking.CustomerFirstName" class="control-label">@Html.DisplayNameFor(model => model.Booking.CustomerFirstName)</label>
-                <input asp-for="Booking.CustomerFirstName" class="form-control" value="@Model.Booking.CustomerFirstName" readonly="readonly" />
+                <label for="Booking_PedaloName">Pedalo</label>
+                <select id="Booking_PedaloName" class="form-control" asp-for="Booking.PedaloName">
+                    @foreach (var pedalo in Model.Pedalos)
+                    {
+                        <option value="@pedalo.Name" data-capacity="@pedalo.Capacity">@pedalo.Name</option>
+                    }
+                </select>
             </div>
             <div class="form-group">
-                <label asp-for="Booking.CustomerLastName" class="control-label">@Html.DisplayNameFor(model => model.Booking.CustomerLastName)</label>
-                <input asp-for="Booking.CustomerLastName" class="form-control" value="@Model.Booking.CustomerLastName" readonly="readonly" />
+                <label>Pedalo Capacity</label>
+                <input id="pedaloCapacityTextBox" type="text" class="form-control" readonly />
+            </div>
+            <div class="form-group">
+                <label asp-for="Booking.StartDate">Start Date</label>
+                <input asp-for="Booking.StartDate" class="form-control" type="datetime-local" />
+                <span asp-validation-for="Booking.StartDate" class="text-danger"></span>
             </div>
 
             <div class="form-group">
-                <label asp-for="Booking.StartDate" class="control-label">Start==Date</label>
-                <input asp-for="Booking.StartDate" class="form-control" />
+                <label asp-for="Booking.EndDate">End Date</label>
+                <input asp-for="Booking.EndDate" class="form-control" type="datetime-local" />
+                <span asp-validation-for="Booking.EndDate" class="text-danger"></span>
             </div>
 
             <div class="form-group">
-                <label asp-for="Booking.EndDate" class="control-label"></label>
-                <input asp-for="Booking.EndDate" class="form-control" />
+                <label asp-for="Booking.CustomerFullName">Customer</label>
+                <select asp-for="Booking.CustomerFullName" class="form-control">
+                    <option value="">Select a Customer</option>
+                    @foreach (var customer in Model.Customers)
+                    {
+                        <option value="@($"{customer.FirstName} {customer.LastName}")">@($"{customer.FirstName} {customer.LastName}")</option>
+                    }
+                </select>
+                <span asp-validation-for="Booking.CustomerFullName" class="text-danger"></span>
             </div>
 
             <div class="form-group">
-                <input asp-for="Booking.BookingId" type="hidden" />
-                <input type="submit" value="Edit" class="btn btn-primary" />
+                <label>Passengers</label>
+                <section id="passengerListSection">
+                    @foreach (var passenger in Model.Passengers)
+                    {
+                        <div class="form-check">
+                            <input class="form-check-input passenger-checkbox" type="checkbox"
+                                   id="passenger-@passenger.PassengerId"
+                                   value="@passenger.PassengerId"
+                                   name="Booking.SelectedPassengerIds"
+                            @(Model.Booking.SelectedPassengerIds.Contains(passenger.PassengerId) ? "checked" : "")>
+                            <label class="form-check-label" for="passenger-@passenger.PassengerId">
+                                @passenger.PassengerFirstName @passenger.PassengerLastName
+                            </label>
+                        </div>
+                    }
+                </section>
+                <div>
+                    <p id="validationText" class="text-danger"></p>
+                </div>
             </div>
+
+            <button type="submit" id="editButton" class="btn btn-primary">Save</button>
+            <a asp-page="./Index" class="btn btn-secondary">Cancel</a>
         </form>
     </div>
 </div>
 
+
+<script>
+    //booking time validation
+    var startTimeInput = document.getElementById("startTimeInput");
+    var endTimeInput = document.getElementById("endTimeInput");
+
+    startTimeInput.addEventListener("input", validateTimeRange);
+    endTimeInput.addEventListener("input", validateTimeRange);
+    function validateTimeRange() {
+        var startTime = startTimeInput.value;
+        var endTime = endTimeInput.value;
+
+        if (startTime && endTime) {
+            if (startTime > endTime) {
+                startTimeInput.setCustomValidity("Start time cannot be after end time.");
+                endTimeInput.setCustomValidity("End time cannot be before start time.");
+            } else {
+                startTimeInput.setCustomValidity("");
+                endTimeInput.setCustomValidity("");
+            }
+        }
+    }
+</script>

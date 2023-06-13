@@ -1,10 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using System.Linq;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using PedaloWebApp.Core.Domain.Entities;
 using PedaloWebApp.Core.Interfaces.Data;
-using System.Linq;
-using System;
 
 namespace PedaloWebApp.Pages.Bookings
 {
@@ -12,17 +12,20 @@ namespace PedaloWebApp.Pages.Bookings
     {
         private readonly IDbContextFactory contextFactory;
 
-        public DeleteModel(IDbContextFactory contextFactory) =>
+        public DeleteModel(IDbContextFactory contextFactory)
+        {
             this.contextFactory = contextFactory;
+        }
 
         [BindProperty]
         public Booking Booking { get; set; }
 
-        public IActionResult OnGet(Guid id) // Update parameter type to Guid
+        public IActionResult OnGet(Guid id)
         {
             using var context = this.contextFactory.CreateReadOnlyContext();
             this.Booking = context.Bookings
                 .Include(x => x.Customer)
+                .Include(x => x.Pedalo)
                 .FirstOrDefault(x => x.BookingId == id);
 
             if (this.Booking == null)
@@ -36,13 +39,15 @@ namespace PedaloWebApp.Pages.Bookings
         public IActionResult OnPost()
         {
             using var context = this.contextFactory.CreateContext();
-            var booking = context.Bookings.Find(this.Booking.BookingId);
+            this.Booking = context.Bookings.Find(this.Booking.BookingId);
 
-            if (booking != null)
+            if (this.Booking == null)
             {
-                context.Bookings.Remove(booking);
-                context.SaveChanges();
+                return this.NotFound();
             }
+
+            context.Bookings.Remove(this.Booking);
+            context.SaveChanges();
 
             return this.RedirectToPage("./Index");
         }
