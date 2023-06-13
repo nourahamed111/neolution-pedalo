@@ -42,10 +42,10 @@ namespace PedaloWebApp.Pages.Bookings
             {
                 BookingId = bookingEntity.BookingId,
                 PedaloName = bookingEntity.Pedalo.Name,
-                StartDate = bookingEntity.StartDate,
-                EndDate = bookingEntity.EndDate,
-                CustomerFirstName = bookingEntity.Customer.FirstName,
-                CustomerLastName = bookingEntity.Customer.LastName,
+                Date = bookingEntity.StartDate.Date,
+                StartTime = bookingEntity.StartDate.TimeOfDay,
+                EndTime = bookingEntity.EndDate?.TimeOfDay,
+                CustomerFullName = $"{bookingEntity.Customer.FirstName} {bookingEntity.Customer.LastName}",
                 AvailablePassengerIds = context.Passengers.Select(p => p.PassengerId).ToList(),
                 SelectedPassengerIds = bookingEntity.Passengers.Select(p => p.PassengerId).ToList()
             };
@@ -116,10 +116,13 @@ namespace PedaloWebApp.Pages.Bookings
                 return NotFound();
             }
 
+            var startDateTime = Booking.Date.Date + Booking.StartTime;
+            var endDateTime = Booking.Date.Date + Booking.EndTime.GetValueOrDefault();
+
             updatedBooking.PedaloId = pedalo.PedaloId;
             updatedBooking.CustomerId = customer.CustomerId;
-            updatedBooking.StartDate = Booking.StartDate;
-            updatedBooking.EndDate = Booking.EndDate;
+            updatedBooking.StartDate = startDateTime;
+            updatedBooking.EndDate = endDateTime;
             updatedBooking.PassengerNames = string.Join(",", passengerNames);
 
             context.SaveChanges();
@@ -132,8 +135,9 @@ namespace PedaloWebApp.Pages.Bookings
     {
         public Guid BookingId { get; set; }
         public string PedaloName { get; set; }
-        public DateTime StartDate { get; set; }
-        public DateTime? EndDate { get; set; }
+        public DateTime Date { get; set; }
+        public TimeSpan StartTime { get; set; }
+        public TimeSpan? EndTime { get; set; }
         public string CustomerFullName { get; set; }
 
         public string CustomerFirstName
@@ -175,7 +179,4 @@ namespace PedaloWebApp.Pages.Bookings
         public List<Guid> AvailablePassengerIds { get; set; } = new List<Guid>();
         public List<Guid> SelectedPassengerIds { get; set; } = new List<Guid>();
     }
-
-
-
 }

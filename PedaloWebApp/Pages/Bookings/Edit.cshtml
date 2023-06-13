@@ -26,16 +26,23 @@
                 <input id="pedaloCapacityTextBox" type="text" class="form-control" readonly />
             </div>
             <div class="form-group">
-                <label asp-for="Booking.StartDate">Start Date</label>
-                <input asp-for="Booking.StartDate" class="form-control" type="datetime-local" />
-                <span asp-validation-for="Booking.StartDate" class="text-danger"></span>
+                <label asp-for="Booking.Date">Date</label>
+                <input asp-for="Booking.Date" class="form-control" required type="date" />
+                <span asp-validation-for="Booking.Date" class="text-danger"></span>
             </div>
 
             <div class="form-group">
-                <label asp-for="Booking.EndDate">End Date</label>
-                <input asp-for="Booking.EndDate" class="form-control" type="datetime-local" />
-                <span asp-validation-for="Booking.EndDate" class="text-danger"></span>
+                <label asp-for="Booking.StartTime">Start Time</label>
+                <input asp-for="Booking.StartTime" class="form-control" type="time" required id="startTimeInput" />
+                <span asp-validation-for="Booking.StartTime" class="text-danger"></span>
             </div>
+
+            <div class="form-group">
+                <label asp-for="Booking.EndTime">End Time</label>
+                <input asp-for="Booking.EndTime" class="form-control" type="time" required id="endTimeInput" />
+                <span asp-validation-for="Booking.EndTime" class="text-danger"></span>
+            </div>
+
 
             <div class="form-group">
                 <label asp-for="Booking.CustomerFullName">Customer</label>
