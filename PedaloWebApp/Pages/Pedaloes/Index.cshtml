@@ -4,7 +4,7 @@
     ViewData["Title"] = "Pedaloes";
 }
 
-    <h1>@ViewData["Title"]</h1>
+<h1 class=" text-danger">@ViewData["Title"]</h1>
 
 <table class="table">
     <thead>
@@ -24,7 +24,7 @@
             <th></th>
             <th></th>
             <th>
-                <a asp-page="./Create">Create</a>
+                <a class="btn btn-primary" asp-page="./Create">Create</a>
             </th>
         </tr>
     </thead>
@@ -46,11 +46,11 @@
             </td>
             <td><a href="/pedaloes/pdf/?id=@item.PedaloId">PDF</a></td>
                 <td>
-                    <a asp-page="./Edit" asp-route-id="@item.PedaloId">Edit</a>
+                    <a class="btn btn-primary" asp-page="./Edit" asp-route-id="@item.PedaloId">Edit</a>
                 </td>
              
                 <td>
-                    <a asp-page="./Delete" asp-route-id="@item.PedaloId">Delete</a>
+                    <a class="btn btn-danger" asp-page="./Delete" asp-route-id="@item.PedaloId">Delete</a>
                 </td>
         </tr>
     }

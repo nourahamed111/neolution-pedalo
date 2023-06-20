@@ -4,7 +4,7 @@
     ViewData["Title"] = "Customers";
 }
 
-<h1>@ViewData["Title"]</h1>
+<h1 class="text-danger">@ViewData["Title"]</h1>
 
 <table class="table">
     <thead>
@@ -20,7 +20,7 @@
             </th>
             <th></th>
             <th>
-                <a asp-page="./Create">Create</a>
+                <a class="btn btn-primary" asp-page="./Create">Create</a>
             </th>
         </tr>
     </thead>
@@ -38,11 +38,11 @@
                     @Html.DisplayFor(modelItem => item.BirthdayDate)
                 </td>
                 <td>
-                    <a asp-page="./Edit" asp-route-id="@item.CustomerId">Edit</a>
+                    <a class="btn btn-primary" asp-page="./Edit" asp-route-id="@item.CustomerId">Edit</a>
                 </td>
             
                 <td>
-                    <a asp-page="./Delete" asp-route-id="@item.CustomerId">Delete</a>
+                    <a class="btn btn-danger" asp-page="./Delete" asp-route-id="@item.CustomerId">Delete</a>
                 </td>
             </tr>
         }
