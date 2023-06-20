@@ -69,9 +69,9 @@ namespace PedaloWebApp.Pages.Bookings
                 .Select(p => $"{p.PassengerFirstName} {p.PassengerLastName}")
                 .ToList();
 
-            if (passengerNames.Count == 0)
+            if (!passengerNames.Contains(Booking.CustomerFullName))
             {
-                passengerNames.Add($"{customer.FirstName} {customer.LastName}");
+                passengerNames.Add(Booking.CustomerFullName);
             }
 
             var startDateTime = Booking.Date.Date + Booking.StartTime;
