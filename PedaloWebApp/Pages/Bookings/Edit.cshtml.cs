@@ -105,10 +105,12 @@ namespace PedaloWebApp.Pages.Bookings
             var passengerNames = selectedPassengers
                 .Select(p => $"{p.PassengerFirstName} {p.PassengerLastName}")
                 .ToList();
-            if (passengerNames.Count == 0)
+
+            if (!passengerNames.Contains(Booking.CustomerFullName))
             {
-                passengerNames.Add($"{customer.FirstName} {customer.LastName}");
+                passengerNames.Add(Booking.CustomerFullName);
             }
+
             var updatedBooking = context.Bookings.FirstOrDefault(b => b.BookingId == Booking.BookingId);
 
             if (updatedBooking == null)
@@ -129,6 +131,7 @@ namespace PedaloWebApp.Pages.Bookings
 
             return RedirectToPage("./Index");
         }
+
     }
 
     public class BookingEditModel
