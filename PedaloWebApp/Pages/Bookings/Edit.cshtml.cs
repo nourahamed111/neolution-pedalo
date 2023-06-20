@@ -47,7 +47,9 @@ namespace PedaloWebApp.Pages.Bookings
                 EndTime = bookingEntity.EndDate?.TimeOfDay,
                 CustomerFullName = $"{bookingEntity.Customer.FirstName} {bookingEntity.Customer.LastName}",
                 AvailablePassengerIds = context.Passengers.Select(p => p.PassengerId).ToList(),
-                SelectedPassengerIds = bookingEntity.Passengers.Select(p => p.PassengerId).ToList()
+                SelectedPassengerIds = bookingEntity.Passengers.Select(p => p.PassengerId).ToList(),
+                AvailablePassengerNames = context.Passengers.Select(p => $"{p.PassengerFirstName} {p.PassengerLastName}").ToList(),
+                SelectedPassengerNames = bookingEntity.PassengerNames.Split(',', StringSplitOptions.RemoveEmptyEntries).ToList()
             };
 
             Pedalos = context.Pedaloes.ToList();
@@ -181,5 +183,7 @@ namespace PedaloWebApp.Pages.Bookings
 
         public List<Guid> AvailablePassengerIds { get; set; } = new List<Guid>();
         public List<Guid> SelectedPassengerIds { get; set; } = new List<Guid>();
+        public List<string> AvailablePassengerNames { get; set; } = new List<string>();
+    public List<string> SelectedPassengerNames { get; set; } = new List<string>();
     }
 }
